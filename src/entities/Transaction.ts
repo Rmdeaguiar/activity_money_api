@@ -6,13 +6,13 @@ export class Transaction {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type: 'number'})
+    @Column()
     value: number
 
-    @Column({type:'date'})
+    @Column()
     date: Date
 
-    @Column({type:'text'})
+    @Column()
     type: string
 
     @ManyToOne(()=> User, user => user.transactions)

@@ -6,10 +6,10 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({ type: 'text', unique: true })
+    @Column({ unique: true })
     username: string
 
-    @Column({ type: 'text' })
+    @Column()
     password: string
 
     @OneToMany(() => Transaction, transaction => transaction.user)

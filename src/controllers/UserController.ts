@@ -1,9 +1,7 @@
-import 'dotenv.config'
+import 'dotenv/config'
 import { Request, Response } from 'express';
 import { userRepository } from '../repositories/userRepository';
-import { transactionRepository } from '../repositories/transactionRepository';
 import jwt from 'jsonwebtoken';
-import { User } from '../entities/User';
 import { encryptPasswordValue, comparePasswords } from '../utils/handlePassword';
 
 export class UserController {
@@ -17,12 +15,11 @@ export class UserController {
             const passwordHash = await encryptPasswordValue(password);
             const newUser = userRepository.create({
                 username,
-                password
+                password: passwordHash
             })
 
             await userRepository.save(newUser);
             return res.status(201).json(newUser);
-
 
         } catch (error) {
             console.log(error)
@@ -33,10 +30,9 @@ export class UserController {
     async login(req: Request, res: Response) {
         const { username, password } = req.body;
 
-
         try {
             const userInfo = await userRepository.findOneBy({ username })
-            if (!userInfo) return res.status(400).json('O usuário não foi encontrado')
+            if (!userInfo) return res.status(400).json('O usuário não foi encontrado');
 
             const correctPassowrd = await comparePasswords(password, userInfo.password)
             if (!correctPassowrd) return res.status(400).json('Username e senha não conferem')
@@ -47,7 +43,7 @@ export class UserController {
 
             const { password: _, ...userLogin } = userInfo
 
-            return res.json({user: userLogin, token});
+            return res.json({ user: userLogin, token });
 
         } catch (error) {
             console.log(error)
@@ -57,7 +53,6 @@ export class UserController {
     }
 
     async getUser(req: Request, res: Response) {
-        //return res.json(req.user)
-
+        return res.json(req.user);
     }
 }
