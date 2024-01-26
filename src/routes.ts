@@ -13,5 +13,7 @@ routes.use(verifyToken);
 routes.get('/user', new UserController().getUser);
 
 routes.post('/transaction', new TransactionController().newTransaction);
+routes.get('/transactions', new TransactionController().getTransactions);
+
 
 export default routes;
