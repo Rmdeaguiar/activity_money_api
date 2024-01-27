@@ -35,13 +35,57 @@ export class TransactionController {
 
         try {
             const allTransactions = await transactionRepository.createQueryBuilder()
-            .select('transaction')
-            .from(Transaction, 'transaction')
-            .where({user: user})
-            .distinct()
-            .getRawMany()
+                .select('transaction')
+                .from(Transaction, 'transaction')
+                .where({ user: user })
+                .distinct()
+                .getRawMany()
 
             return res.json(allTransactions);
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+        }
+    }
+
+    async editTransaction(req: Request, res: Response) {
+        const { id } = req.params
+        const { value, date, type } = req.body;
+
+        try {
+            const transactionId = Number(id);
+            const transaction = await transactionRepository.findOne({ where: { id: transactionId } })
+
+            if (!transaction) return res.status(400).json('Não foi encontrada transação com este id');
+
+            await transactionRepository.createQueryBuilder()
+                .update(Transaction)
+                .set({ value: value, date: date, type: type })
+                .where({ id: transactionId })
+                .execute();
+            return res.status(201).json('Transação alterada com sucesso');
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+        }
+    }
+
+    async deleteTransaction(req: Request, res: Response) {
+        const { id } = req.params;
+
+        try {
+            const transactionId = Number(id);
+            const transaction = await transactionRepository.findOne({ where: { id: transactionId } })
+
+            if (!transaction) return res.status(400).json('Não foi encontrada transação com este id');
+
+            await transactionRepository.createQueryBuilder()
+                .delete()
+                .where({ id: transactionId })
+                .execute();
+            return res.status(201).json('Transação removida com sucesso');
 
         } catch (error) {
             console.log(error);
