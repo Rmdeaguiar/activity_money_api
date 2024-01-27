@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { transactionRepository } from '../repositories/transactionRepository';
-import { userRepository } from '../repositories/userRepository';
 import { Transaction } from '../entities/Transaction';
 import { User } from '../entities/User';
 
@@ -10,7 +9,7 @@ export class TransactionController {
         const user = req.user;
         const { value, date, type } = req.body
 
-        if (!value || value <= 0) return res.status(400).json({ mensagem: 'Um valor é válido é obrigatório' });
+        if (!value || value <= 0) return res.status(400).json({ mensagem: 'Um valor válido é obrigatório' });
         if (!date) return res.status(400).json({ mensagem: 'A data é obrigatória' });
         if (!type) return res.status(400).json({ mensagem: 'O tipo é obrigatório' });
 
