@@ -15,6 +15,9 @@ export class Transaction {
     @Column()
     type: string
 
+    @Column({nullable: true})
+    title: string
+
     @ManyToOne(()=> User, user => user.transactions)
     @JoinColumn({name: 'user_id'})
     user: User

@@ -7,7 +7,7 @@ export class TransactionController {
 
     async newTransaction(req: Request, res: Response) {
         const user = req.user;
-        const { value, date, type } = req.body
+        const { value, date, type, title } = req.body
 
         if (!value || value <= 0) return res.status(400).json({ mensagem: 'Um valor válido é obrigatório' });
         if (!date) return res.status(400).json({ mensagem: 'A data é obrigatória' });
@@ -18,6 +18,7 @@ export class TransactionController {
             transaction.value = value;
             transaction.date = date;
             transaction.type = type;
+            transaction.title = title
             transaction.user = user as User;
 
             await transactionRepository.save(transaction);
@@ -50,7 +51,7 @@ export class TransactionController {
 
     async editTransaction(req: Request, res: Response) {
         const { id } = req.params
-        const { value, date, type } = req.body;
+        const { value, date, type, title } = req.body;
 
         try {
             const transactionId = Number(id);
@@ -60,7 +61,7 @@ export class TransactionController {
 
             await transactionRepository.createQueryBuilder()
                 .update(Transaction)
-                .set({ value: value, date: date, type: type })
+                .set({ value: value, date: date, type: type, title: title })
                 .where({ id: transactionId })
                 .execute();
             return res.status(201).json('Transação alterada com sucesso');
