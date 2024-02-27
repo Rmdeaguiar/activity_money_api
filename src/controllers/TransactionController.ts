@@ -53,6 +53,10 @@ export class TransactionController {
         const { id } = req.params
         const { value, date, type, title } = req.body;
 
+        if (!value || value <= 0) return res.status(400).json({ mensagem: 'Um valor válido é obrigatório' });
+        if (!date) return res.status(400).json({ mensagem: 'A data é obrigatória' });
+        if (!type) return res.status(400).json({ mensagem: 'O tipo é obrigatório' });
+
         try {
             const transactionId = Number(id);
             const transaction = await transactionRepository.findOne({ where: { id: transactionId } })

@@ -3,13 +3,13 @@ import { Request, Response } from 'express';
 import { userRepository } from '../repositories/userRepository';
 import jwt from 'jsonwebtoken';
 import { encryptPasswordValue, comparePasswords } from '../utils/handlePassword';
+import validateUser from '../filters/schemaVerifyUser';
 
 export class UserController {
     async signUp(req: Request, res: Response) {
         const { username, password } = req.body;
-
         try {
-            const userInfo = await userRepository.findOne({ where: { username } });
+            const userInfo = await userRepository.findOneBy({ username });
             if (userInfo) return res.status(400).json({ mensagem: 'Este username já existe' })
 
             const passwordHash = await encryptPasswordValue(password);
@@ -46,7 +46,7 @@ export class UserController {
             return res.json({ user: userLogin, token });
 
         } catch (error) {
-            console.log(error)
+            console.log("erro > ", error)
             return res.status(500).json({ message: 'Internal server error' })
         }
 
